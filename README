@@ -1,0 +1,3 @@
+brew install qt
+brew install cmake
+pip install pyside
