@@ -6,12 +6,15 @@
 # Feel free to use it as is. 
 # contact: htutkhwin@gmail.com
 import os
+import sys
 import re
 import time
 import Tkinter
 from tkFileDialog import askdirectory 
 from selenium import webdriver
 import selenium.webdriver.chrome.service
+
+print "bash"
 
 # sample code for tkinter use popup window for directory
 def getdir(default): 
@@ -31,7 +34,7 @@ def closeDriver(service, driver):
 	service.stop() 
 
 def openService(link):
-	service = selenium.webdriver.chrome.service.Service('/Users/sudo/Dropbox/Workspace/Utility/youtubeTomp3/chromedriver')
+	service = selenium.webdriver.chrome.service.Service('/Users/sudo/Dropbox/Workspace/Utility/youtubeTomp3/drivers/chromedriver')
 	service.start()
 	return service
 	# binary, chrome finder
@@ -43,27 +46,22 @@ def openDriver(service):
 
 def downloadFile(driver, link): 
 	driver.get(link)
-	page = driver.page_source
 	buttons = driver.find_element_by_xpath("/html/body/div[@id='converter_background']/div[@id='converter']/div[@id='buttons']/a[1]")
 	downloadlink = buttons.get_attribute("href")
 	title = driver.find_element_by_xpath("/html/body/div[@id='converter_background']/div[@id='converter']/div[@id='title']").text + ".mp3"
 	nospacetitle = title.replace(" ","_").replace("[", "").replace("]", "")
-	line = 1
-	if (findfile(nospacetitle) == False): 
-		print "Downloading: ",link, nospacetitle
-		driver.get(downloadlink)
-		line += 1
 	
-	while (findfile(nospacetitle) == False):
+	print "Downloading: ", nospacetitle
+	driver.get(downloadlink)
+	
+	while (findfile() == True):
 		time.sleep(10)
 
-def findfile(title): 
+def findfile(): 
 	dir = os.listdir("/Users/sudo/Downloads/")
 	exists = False
 	for files in dir:
-		dcode = files.decode("utf-8")
-		ecode = dcode.encode("ascii", "ignore")
-		if (ecode == title.encode("ascii", "ignore")): 
+		if files.endswith("crdownload"):
 				exists = True 
 	return exists
 
